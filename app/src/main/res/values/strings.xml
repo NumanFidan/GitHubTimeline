@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">GitHub Timeline</string>
+    <string name="no_user_found">No user found!</string>
+    <string name="communication_error">Communication Error with the server</string>
+</resources>
