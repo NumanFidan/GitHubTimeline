@@ -2,20 +2,24 @@ package com.simplertutorials.android.githubtimeline.domain
 
 import android.util.Log
 import com.google.gson.annotations.SerializedName
+import java.io.FileDescriptor
+import java.lang.Exception
+import java.lang.NumberFormatException
 
-class TimelineItem : Comparable<TimelineItem> {
-
-    @SerializedName("name")
-    var repoName: String? = null
+class TimelineItem(
+    @SerializedName("name") var repoName: String,
+    repoDescripton: String,
+    created_at: String
+) : Comparable<TimelineItem> {
 
     @SerializedName("description")
-    var repoDescription: String? = null
+    var repoDescription: String = repoDescripton
 
     @SerializedName("url")
     var repoUrl: String? = null
 
     @SerializedName("created_at")
-    var repoCreatedAt: String? = null
+    var repoCreatedAt: String = created_at
 
     @SerializedName("updated_at")
     var repoUpdatedAt: String? = null
@@ -25,25 +29,47 @@ class TimelineItem : Comparable<TimelineItem> {
 
     override fun toString(): String {
 //        return "+\n*** " + repoName + "\n" + repoDescription + "\n" + repoUrl + "\n" + repoCreatedAt + "\n" + repoUpdatedAt + "\n" + repoLanguage + "\n"
-        return "\n"+ repoCreatedAt
+        return "\n" + repoCreatedAt
     }
 
     override fun compareTo(other: TimelineItem): Int {
-        if (this.repoCreatedAt != null && other.repoCreatedAt!= null) {
-            val thisComparableDate = turnStringDateToInt(this.repoCreatedAt!!)
-            val otherComparableDate = turnStringDateToInt(other.repoCreatedAt!!)
+        var thisComparableDate = -1
+        var otherComparableDate = -1
+        try {
+            thisComparableDate = turnStringDateToInt(this.repoCreatedAt)
+            otherComparableDate = turnStringDateToInt(other.repoCreatedAt)
 
             return when {
-                thisComparableDate > otherComparableDate -> 1
-                thisComparableDate < otherComparableDate -> -1
-                else -> 0
+                thisComparableDate > otherComparableDate -> OBJECT_BIGGER
+                thisComparableDate < otherComparableDate -> OBJECT_SMALLER
+                else -> OBJECTS_EQUAL
+            }
+        } catch (e: Exception) {
+            if (e is NumberFormatException) {
+                return if (thisComparableDate != -1)
+                    OBJECT_BIGGER
+                else {
+                    try {
+                        turnStringDateToInt(other.repoCreatedAt)
+                        OBJECT_SMALLER
+                    } catch (e: Exception) {
+                        OBJECTS_EQUAL
+                    }
+                }
             }
         }
-        return 0
+        return OBJECTS_EQUAL
     }
 
-    private fun turnStringDateToInt(date: String): String {
+    @Throws(Exception::class)
+    private fun turnStringDateToInt(date: String): Int {
         return date.split("T")[0].split('-')
-            .joinToString(prefix = "", postfix = "", separator = "•")
+            .joinToString(prefix = "", postfix = "", separator = "").toInt()
+    }
+
+    companion object {
+        const val OBJECT_BIGGER: Int = 1
+        const val OBJECT_SMALLER: Int = -1
+        const val OBJECTS_EQUAL: Int = 0
     }
 }
