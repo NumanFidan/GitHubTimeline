@@ -1,6 +1,8 @@
 package com.simplertutorials.android.githubtimeline.utils
 
+import com.simplertutorials.android.githubtimeline.domain.DetailedUser
 import com.simplertutorials.android.githubtimeline.domain.TimelineItem
+import com.simplertutorials.android.githubtimeline.domain.User
 
 class TestUtils {
     companion object {
@@ -19,5 +21,20 @@ class TestUtils {
             "MileStone", "Shows users Popular Movies",
             timeStamp_bigger
         )
+
+        const val detailedUserName = "foo"
+
+        @JvmStatic
+        val detailedUser = DetailedUser(
+            detailedUserName,
+            "Berlin",
+            "https://www.github.com",
+            12,
+            12)
+
+        const val userName = "foo"
+
+        @JvmStatic
+        val user= User(detailedUserName)
     }
 }
