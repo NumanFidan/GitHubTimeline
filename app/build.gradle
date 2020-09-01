@@ -22,6 +22,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets{
+        test.java.srcDirs += "src/test-common/java"
+        androidTest.java.srcDirs += "src/test-common/java"
+    }
 }
 
 dependencies {
@@ -63,6 +67,30 @@ dependencies {
     implementation "androidx.core:core-ktx:+"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+    // -------- INSTRUMENTATION TESTS (use JUnit4)
+    androidTestImplementation 'junit:junit:4.12'
+
+    // AndroidX test
+    def androidx_test_version = "1.1.0"
+    androidTestImplementation "androidx.test:core:$androidx_test_version"
+    androidTestImplementation "androidx.test:runner:$androidx_test_version"
+
+    // Architecture components testing
+    def androidx_arch_test_version = "2.0.1"
+    androidTestImplementation "androidx.arch.core:core-testing:$androidx_arch_test_version"
+
+
+    // -------- LOCAL UNIT TESTS (use JUnit5)
+    // JUnit Jupiter
+    def junit_jupiter_version = "5.3.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$junit_jupiter_version"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_jupiter_version"
+
+
+    // -------- MOCKITO
+    def mockito_version = "2.19.0"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
 }
 repositories {
     mavenCentral()
