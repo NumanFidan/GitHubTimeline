@@ -27,6 +27,16 @@ class TimelineItem(
     @SerializedName("language")
     var repoLanguage: String? = null
 
+    constructor(timelineItem: TimelineItem) : this(
+        timelineItem.repoName,
+        timelineItem.repoDescription,
+        timelineItem.repoCreatedAt
+    ) {
+        this.repoUrl = timelineItem.repoUrl
+        this.repoUpdatedAt = timelineItem.repoUpdatedAt
+        this.repoLanguage = timelineItem.repoLanguage
+    }
+
     override fun toString(): String {
 //        return "+\n*** " + repoName + "\n" + repoDescription + "\n" + repoUrl + "\n" + repoCreatedAt + "\n" + repoUpdatedAt + "\n" + repoLanguage + "\n"
         return "\n" + repoCreatedAt

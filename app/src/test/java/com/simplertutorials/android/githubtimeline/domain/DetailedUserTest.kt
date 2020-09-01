@@ -13,8 +13,8 @@ class DetailedUserTest{
      */
     @Test
     fun isEqual_twoIdentical_returnTrue(){
-        var detailedUser = DetailedUser(TestUtils.detailedUser_one)
-        var detailedUser2= DetailedUser(TestUtils.detailedUser_one)
+        var detailedUser = DetailedUser(TestUtils.detailedUser)
+        var detailedUser2= DetailedUser(TestUtils.detailedUser)
         assertEquals(true, detailedUser.equals(detailedUser2) )
     }
 
@@ -26,9 +26,9 @@ class DetailedUserTest{
      */
     @Test
     fun isEqual_twoDifferentUserName_returnFalse(){
-        var detailedUser = DetailedUser(TestUtils.detailedUser_one)
+        var detailedUser = DetailedUser(TestUtils.detailedUser)
         detailedUser.userName = "detailedUser1"
-        var detailedUser2= DetailedUser(TestUtils.detailedUser_one)
+        var detailedUser2= DetailedUser(TestUtils.detailedUser)
         detailedUser.userName = "detailedUser1"
 
         assertEquals(false, detailedUser.equals(detailedUser2) )
@@ -41,10 +41,10 @@ class DetailedUserTest{
      */
     @Test
     fun isEqual_sameUserNameDifferentLocation_returnTrue(){
-        var detailedUser = DetailedUser(TestUtils.detailedUser_one)
+        var detailedUser = DetailedUser(TestUtils.detailedUser)
         detailedUser.location ="London"
 
-        val detailedUser2 =DetailedUser(TestUtils.detailedUser_one)
+        val detailedUser2 =DetailedUser(TestUtils.detailedUser)
         detailedUser2.location = "Berlin"
 
         assertEquals(true, detailedUser.equals(detailedUser2) )
@@ -56,10 +56,10 @@ class DetailedUserTest{
      */
     @Test
     fun isEqual_oneWithUserNameOtherWithoutUserName_returnFalse(){
-        var detailedUser = DetailedUser(TestUtils.detailedUser_one)
+        var detailedUser = DetailedUser(TestUtils.detailedUser)
         detailedUser.userName ="foo"
 
-        val detailedUser2 =DetailedUser(TestUtils.detailedUser_one)
+        val detailedUser2 =DetailedUser(TestUtils.detailedUser)
         detailedUser2.userName = ""
 
         assertEquals(false, detailedUser.equals(detailedUser2) )

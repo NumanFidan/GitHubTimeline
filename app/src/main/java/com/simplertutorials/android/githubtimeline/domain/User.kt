@@ -16,6 +16,13 @@ open class User() : Parcelable {
         loginName = parcel.readString()
         avatarUrl = parcel.readString()
     }
+    constructor(loginName:String) : this() {
+        this.loginName = loginName
+    }
+    constructor(user:User) : this() {
+        this.loginName = user.loginName
+        this.avatarUrl = user.avatarUrl
+    }
 
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
