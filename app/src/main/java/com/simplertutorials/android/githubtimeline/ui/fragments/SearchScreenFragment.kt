@@ -1,5 +1,6 @@
 package com.simplertutorials.android.githubtimeline.ui.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -20,27 +21,30 @@ import com.simplertutorials.android.githubtimeline.ui.customListeners.UserSugges
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.search_screen_fragment.*
 import kotlinx.android.synthetic.main.search_screen_fragment.view.*
 import javax.inject.Inject
 
 
-class SearchScreenFragment : BaseFragment(), UserSuggestionOnClick {
+open class SearchScreenFragment : BaseFragment(), UserSuggestionOnClick, SearchScreenMVP.View {
     private val ARG_USER_PARAM: String = "current_user"
     private lateinit var _presenter: SearchScreenPresenter
     private lateinit var activity: MainActivity
     private lateinit var recyclerViewAdapter: SuggestionsAdapter
-    private lateinit var suggestionsList: ArrayList<User>
+    private lateinit var mSuggestionsList: ArrayList<User>
     private lateinit var searchBox: EditText
+    private lateinit var suggestionsBehaviourSubject: BehaviorSubject<List<User>>
 
     @Inject
     lateinit var apiService: ApiService
 
+    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity.applicationContext as MainApplication).component.inject(this)
         _presenter = SearchScreenPresenter(this, apiService)
-        suggestionsList = ArrayList<User>()
+        mSuggestionsList = ArrayList<User>()
 
     }
 
@@ -51,7 +55,17 @@ class SearchScreenFragment : BaseFragment(), UserSuggestionOnClick {
     ): View? {
         val view = inflater.inflate(R.layout.search_screen_fragment, container, false)
         updateUi(view)
+        subscribeSuggestionsBehaviourSubject()
         return view
+    }
+
+    @SuppressLint("CheckResult")
+    private fun subscribeSuggestionsBehaviourSubject() {
+        suggestionsBehaviourSubject = BehaviorSubject.create()
+        suggestionsBehaviourSubject.subscribe(){ n->
+                suggestionsList.clear()
+                suggestionsList.addAll(n)
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -86,7 +100,13 @@ class SearchScreenFragment : BaseFragment(), UserSuggestionOnClick {
         }
     }
 
-    fun searchBoxObservable(): Observable<String>? {
+    override val behaviorSubject: BehaviorSubject<List<User>>
+        get() = this.suggestionsBehaviourSubject
+    override val suggestionsList: ArrayList<User>
+        get() = this.mSuggestionsList
+
+
+    override fun searchBoxObservable(): Observable<String>? {
         //create observable to observe typing in Search Box
         return Observable
             .create<String> { emitter ->
@@ -121,11 +141,11 @@ class SearchScreenFragment : BaseFragment(), UserSuggestionOnClick {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun showTextInputLayoutError(message:String){
+    override fun showTextInputLayoutError(message:String){
         searchBox.error = message
     }
 
-    
+
     fun setProgressBarVisibility(userTyping: Boolean) {
         //show progressbar to  the user or hide it and show suggestions
         if (userTyping) {
@@ -137,10 +157,9 @@ class SearchScreenFragment : BaseFragment(), UserSuggestionOnClick {
         }
     }
 
-    fun suggestionsRefreshed() {
+    override fun suggestionsRefreshed() {
         //hide progressbar and notify the suggestion adapter about new suggestions
         setProgressBarVisibility(false)
-        _presenter.updateSuggestionsList(suggestionsList)
         recyclerViewAdapter.notifyDataSetChanged()
     }
 

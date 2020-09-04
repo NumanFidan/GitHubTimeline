@@ -8,11 +8,11 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import java.lang.Exception
 
-open class BaseFragment : Fragment() {
+open class BaseFragment : Fragment(), BaseMVP.View {
 
     private lateinit var currentToast: Toast
 
-    fun showTopSnackBar(message: String?) {
+    override fun showTopSnackBar(message: String?) {
         if (message == null)
             return
         var snackbar = Snackbar.make(this.view!!, message, Snackbar.LENGTH_SHORT)
@@ -24,7 +24,7 @@ open class BaseFragment : Fragment() {
         snackbar.show()
     }
 
-    fun showToast(message: String?) {
+    override fun showToast(message: String?) {
         //if there is already a toast on the screen
         //  ->simply change the text
         //if there is none-> create one

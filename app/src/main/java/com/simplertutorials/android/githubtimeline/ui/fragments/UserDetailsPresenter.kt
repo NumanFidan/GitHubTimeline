@@ -1,14 +1,10 @@
 package com.simplertutorials.android.githubtimeline.ui.fragments
 
-import android.util.Log
-import com.simplertutorials.android.githubtimeline.R
 import com.simplertutorials.android.githubtimeline.data.api.ApiRepository
 import com.simplertutorials.android.githubtimeline.data.api.ApiService
 import com.simplertutorials.android.githubtimeline.domain.DetailedUser
 import com.simplertutorials.android.githubtimeline.domain.TimelineItem
 import com.simplertutorials.android.githubtimeline.domain.User
-import io.reactivex.disposables.CompositeDisposable
-import java.net.UnknownHostException
 import java.util.ArrayList
 
 class UserDetailsPresenter(
