@@ -7,19 +7,21 @@ import com.google.gson.annotations.SerializedName
 open class User() : Parcelable {
 
     @SerializedName("login")
-    var loginName: String ?=null
+    lateinit var loginName: String
 
     @SerializedName("avatar_url")
-    var avatarUrl:String ?= null
+    var avatarUrl: String? = null
 
     constructor(parcel: Parcel) : this() {
-        loginName = parcel.readString()
+        loginName = parcel.readString().toString()
         avatarUrl = parcel.readString()
     }
-    constructor(loginName:String) : this() {
+
+    constructor(loginName: String) : this() {
         this.loginName = loginName
     }
-    constructor(user:User) : this() {
+
+    constructor(user: User) : this() {
         this.loginName = user.loginName
         this.avatarUrl = user.avatarUrl
     }
@@ -41,6 +43,12 @@ open class User() : Parcelable {
         override fun newArray(size: Int): Array<User?> {
             return arrayOfNulls(size)
         }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is User)
+            return this.loginName.equals(other.loginName)
+        return false
     }
 
 }
