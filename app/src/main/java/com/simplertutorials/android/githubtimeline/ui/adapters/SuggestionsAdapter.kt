@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.simplertutorials.android.githubtimeline.R
 import com.simplertutorials.android.githubtimeline.data.api.ApiRepository
 import com.simplertutorials.android.githubtimeline.data.api.ApiService
-import com.simplertutorials.android.githubtimeline.data.dataHolders.SuggestionsHolder
 import com.simplertutorials.android.githubtimeline.domain.User
 import com.simplertutorials.android.githubtimeline.ui.customListeners.UserSuggestionOnClick
 import com.squareup.picasso.Picasso
