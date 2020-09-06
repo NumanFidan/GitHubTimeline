@@ -8,11 +8,11 @@ import com.simplertutorials.android.githubtimeline.domain.User
 import java.util.ArrayList
 
 class UserDetailsPresenter(
-    private val view: UserDetailsFragment,
+    private val view: UserDetailsMVP.View,
     private val apiService: ApiService
-) : BasePresenter(view) {
+) : BasePresenter(view), UserDetailsMVP.Presenter {
 
-    fun getUserDetails(currentUser: User) {
+    override fun getUserDetails(currentUser: User) {
         //get User Data from API
         //at the end call API again to get user's repo list
         val disposable = ApiRepository.getInstance()

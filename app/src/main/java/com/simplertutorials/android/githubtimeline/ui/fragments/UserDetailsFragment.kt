@@ -26,15 +26,14 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.user_details_screen.view.*
 import javax.inject.Inject
 
-class UserDetailsFragment : BaseFragment() {
+class UserDetailsFragment : BaseFragment(), UserDetailsMVP.View {
 
-    private lateinit var _presenter: UserDetailsPresenter
+    private lateinit var _presenter: UserDetailsMVP.Presenter
     private lateinit var activity: MainActivity
     private lateinit var recyclerViewAdapter: TimelineAdapter
-    lateinit var timelineList: ArrayList<TimelineItem>
     private val ARG_USER_PARAM: String = "current_user"
     private lateinit var currentUser: User
-
+    private lateinit var mTimelineList:ArrayList<TimelineItem>
     private lateinit var swipeToRefreshLayout: SwipeRefreshLayout
     private lateinit var userAvatar: ImageView
     private lateinit var userName: TextView
@@ -58,7 +57,7 @@ class UserDetailsFragment : BaseFragment() {
 
         (activity.applicationContext as MainApplication).component.inject(this)
         _presenter = UserDetailsPresenter(this, apiService)
-        timelineList = ArrayList()
+        mTimelineList = ArrayList()
         _presenter.getUserDetails(currentUser)
     }
 
@@ -133,7 +132,10 @@ class UserDetailsFragment : BaseFragment() {
         this._presenter.onDetach()
     }
 
-    fun fillUserDetails(user: DetailedUser?) {
+    override val timelineList: ArrayList<TimelineItem>
+        get() =mTimelineList
+
+    override fun fillUserDetails(user: DetailedUser?) {
         //fill all user data to the relevant views
         if (user == null)
             return
@@ -157,15 +159,15 @@ class UserDetailsFragment : BaseFragment() {
         hideLoading()
     }
 
-    fun refreshTimelineRecyclerView() {
+    override fun refreshTimelineRecyclerView() {
         recyclerViewAdapter.notifyDataSetChanged()
     }
 
-    fun showLoading() {
+    override fun showLoading() {
         swipeToRefreshLayout.isRefreshing = true
     }
 
-    fun hideLoading() {
+    override fun hideLoading() {
         swipeToRefreshLayout.isRefreshing = false
     }
 
