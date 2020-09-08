@@ -9,11 +9,15 @@ open class User() : Parcelable {
     @SerializedName("login")
     lateinit var loginName: String
 
+    @SerializedName("id")
+    var userId: Int = 0
+
     @SerializedName("avatar_url")
     var avatarUrl: String? = null
 
     constructor(parcel: Parcel) : this() {
         loginName = parcel.readString().toString()
+        userId = parcel.readInt()
         avatarUrl = parcel.readString()
     }
 
@@ -23,6 +27,7 @@ open class User() : Parcelable {
 
     constructor(user: User) : this() {
         this.loginName = user.loginName
+        this.userId = user.userId
         this.avatarUrl = user.avatarUrl
     }
 

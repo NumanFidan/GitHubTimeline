@@ -41,12 +41,14 @@ class SuggestionsAdapter(
             .load(user.avatarUrl)
             .into(holder.avatar)
         holder.username.text = user.loginName
+        holder.userId.text = user.userId.toString()
         holder.layout.setOnClickListener { userSuggestionOnClick.onUserSuggestionClicked(user) }
     }
 
     class SuggestionsHolder(view: View) : RecyclerView.ViewHolder(view) {
         val avatar = view.suggestionsUserAvatar as ImageView
         val username = view.suggestionsUserName as TextView
+        val userId = view.suggestionsUserId as TextView
         val layout = view
     }
 }
