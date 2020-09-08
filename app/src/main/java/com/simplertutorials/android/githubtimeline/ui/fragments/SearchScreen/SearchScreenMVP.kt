@@ -1,13 +1,14 @@
-package com.simplertutorials.android.githubtimeline.ui.fragments
+package com.simplertutorials.android.githubtimeline.ui.fragments.SearchScreen
 
-import android.content.Context
-import com.simplertutorials.android.githubtimeline.data.api.ApiService
 import com.simplertutorials.android.githubtimeline.domain.User
+import com.simplertutorials.android.githubtimeline.ui.fragments.BaseMVP
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 
-interface SearchScreenMVP :BaseMVP{
-    interface View:BaseMVP.View{
+interface SearchScreenMVP :
+    BaseMVP {
+    interface View:
+        BaseMVP.View {
         val behaviorSubject: BehaviorSubject<List<User>>
         val suggestionsList: ArrayList<User>
         fun searchBoxObservable():Observable<String>?
@@ -15,7 +16,8 @@ interface SearchScreenMVP :BaseMVP{
         fun showTextInputLayoutError(string: String)
     }
 
-    interface Presenter: BaseMVP.Presenter{
+    interface Presenter:
+        BaseMVP.Presenter {
         fun subscribeToSearchBox()
     }
 }

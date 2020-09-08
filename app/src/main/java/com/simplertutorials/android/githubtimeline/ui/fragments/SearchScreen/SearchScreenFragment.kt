@@ -1,4 +1,4 @@
-package com.simplertutorials.android.githubtimeline.ui.fragments
+package com.simplertutorials.android.githubtimeline.ui.fragments.SearchScreen
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -18,6 +18,8 @@ import com.simplertutorials.android.githubtimeline.domain.User
 import com.simplertutorials.android.githubtimeline.ui.MainActivity
 import com.simplertutorials.android.githubtimeline.ui.adapters.SuggestionsAdapter
 import com.simplertutorials.android.githubtimeline.ui.customListeners.UserSuggestionOnClick
+import com.simplertutorials.android.githubtimeline.ui.fragments.BaseFragment
+import com.simplertutorials.android.githubtimeline.ui.fragments.UserDetails.UserDetailsFragment
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -27,7 +29,8 @@ import kotlinx.android.synthetic.main.search_screen_fragment.view.*
 import javax.inject.Inject
 
 
-open class SearchScreenFragment : BaseFragment(), UserSuggestionOnClick, SearchScreenMVP.View {
+open class SearchScreenFragment : BaseFragment(), UserSuggestionOnClick,
+    SearchScreenMVP.View {
     private val ARG_USER_PARAM: String = "current_user"
     private lateinit var _presenter: SearchScreenPresenter
     private lateinit var activity: MainActivity
@@ -43,7 +46,11 @@ open class SearchScreenFragment : BaseFragment(), UserSuggestionOnClick, SearchS
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity.applicationContext as MainApplication).component.inject(this)
-        _presenter = SearchScreenPresenter(this, apiService)
+        _presenter =
+            SearchScreenPresenter(
+                this,
+                apiService
+            )
         mSuggestionsList = ArrayList<User>()
 
     }
@@ -165,7 +172,8 @@ open class SearchScreenFragment : BaseFragment(), UserSuggestionOnClick, SearchS
 
     override fun onUserSuggestionClicked(user: User) {
         //pass user to the UserDetails screen
-        val fragment = UserDetailsFragment()
+        val fragment =
+            UserDetailsFragment()
         val args = Bundle()
         args.putParcelable(ARG_USER_PARAM, user)
         fragment.arguments = args

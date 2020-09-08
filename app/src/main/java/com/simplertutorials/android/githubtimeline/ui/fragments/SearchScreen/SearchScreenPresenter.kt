@@ -1,9 +1,10 @@
-package com.simplertutorials.android.githubtimeline.ui.fragments
+package com.simplertutorials.android.githubtimeline.ui.fragments.SearchScreen
 
 import com.simplertutorials.android.githubtimeline.R
 import com.simplertutorials.android.githubtimeline.data.api.ApiRepository
 import com.simplertutorials.android.githubtimeline.data.api.ApiService
 import com.simplertutorials.android.githubtimeline.domain.User
+import com.simplertutorials.android.githubtimeline.ui.fragments.BasePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 

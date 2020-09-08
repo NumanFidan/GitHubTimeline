@@ -1,11 +1,9 @@
-package com.simplertutorials.android.githubtimeline.ui.fragments
+package com.simplertutorials.android.githubtimeline.ui.fragments.MainScreen
 
 import android.animation.Animator
 import android.animation.IntEvaluator
 import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -15,8 +13,9 @@ import android.view.ViewGroup
 import androidx.transition.*
 import com.simplertutorials.android.githubtimeline.R
 import com.simplertutorials.android.githubtimeline.ui.MainActivity
+import com.simplertutorials.android.githubtimeline.ui.fragments.BaseFragment
+import com.simplertutorials.android.githubtimeline.ui.fragments.SearchScreen.SearchScreenFragment
 import kotlinx.android.synthetic.main.main_screen_fragment.view.*
-import kotlin.math.log
 
 
 class MainScreenFragment : BaseFragment() {
@@ -42,7 +41,8 @@ class MainScreenFragment : BaseFragment() {
     }
 
     private fun changeFragmentWithTransaction(view: View) {
-        val details: SearchScreenFragment = SearchScreenFragment()
+        val details: SearchScreenFragment =
+            SearchScreenFragment()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             details.setSharedElementEnterTransition(DetailsTransition())

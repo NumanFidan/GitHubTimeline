@@ -1,8 +1,8 @@
 package com.simplertutorials.android.githubtimeline.components;
 
 import com.simplertutorials.android.githubtimeline.ui.MainActivity;
-import com.simplertutorials.android.githubtimeline.ui.fragments.SearchScreenFragment;
-import com.simplertutorials.android.githubtimeline.ui.fragments.UserDetailsFragment;
+import com.simplertutorials.android.githubtimeline.ui.fragments.SearchScreen.SearchScreenFragment;
+import com.simplertutorials.android.githubtimeline.ui.fragments.UserDetails.UserDetailsFragment;
 
 import javax.inject.Singleton;
 

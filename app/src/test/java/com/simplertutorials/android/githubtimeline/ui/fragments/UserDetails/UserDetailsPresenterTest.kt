@@ -1,4 +1,4 @@
-package com.simplertutorials.android.githubtimeline.ui.fragments
+package com.simplertutorials.android.githubtimeline.ui.fragments.UserDetails
 
 import com.simplertutorials.android.githubtimeline.data.api.ApiService
 import com.simplertutorials.android.githubtimeline.domain.DetailedUser
@@ -32,7 +32,11 @@ class UserDetailsPresenterTest {
 
         apiService = mock(ApiService::class.java)
         view = mock(UserDetailsMVP.View::class.java)
-        presenter = UserDetailsPresenter(view, apiService)
+        presenter =
+            UserDetailsPresenter(
+                view,
+                apiService
+            )
     }
 
     /*

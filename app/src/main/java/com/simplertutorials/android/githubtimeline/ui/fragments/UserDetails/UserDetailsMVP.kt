@@ -1,12 +1,14 @@
-package com.simplertutorials.android.githubtimeline.ui.fragments
+package com.simplertutorials.android.githubtimeline.ui.fragments.UserDetails
 
 import com.simplertutorials.android.githubtimeline.domain.DetailedUser
 import com.simplertutorials.android.githubtimeline.domain.TimelineItem
 import com.simplertutorials.android.githubtimeline.domain.User
-import io.reactivex.subjects.BehaviorSubject
+import com.simplertutorials.android.githubtimeline.ui.fragments.BaseMVP
 
-interface UserDetailsMVP : BaseMVP {
-    interface View : BaseMVP.View {
+interface UserDetailsMVP :
+    BaseMVP {
+    interface View :
+        BaseMVP.View {
         val timelineList: ArrayList<TimelineItem>
 
         fun fillUserDetails(detailedUser: DetailedUser?)
@@ -15,7 +17,8 @@ interface UserDetailsMVP : BaseMVP {
         fun refreshTimelineRecyclerView()
     }
 
-    interface Presenter : BaseMVP.Presenter {
+    interface Presenter :
+        BaseMVP.Presenter {
         fun getUserDetails(currentUser: User)
         fun getUserTimeline(detailedUser: DetailedUser?)
         fun sortList(timelineList: java.util.ArrayList<TimelineItem>)

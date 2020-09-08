@@ -1,4 +1,4 @@
-package com.simplertutorials.android.githubtimeline.ui.fragments
+package com.simplertutorials.android.githubtimeline.ui.fragments.UserDetails
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -22,11 +22,13 @@ import com.simplertutorials.android.githubtimeline.domain.TimelineItem
 import com.simplertutorials.android.githubtimeline.domain.User
 import com.simplertutorials.android.githubtimeline.ui.MainActivity
 import com.simplertutorials.android.githubtimeline.ui.adapters.TimelineAdapter
+import com.simplertutorials.android.githubtimeline.ui.fragments.BaseFragment
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.user_details_screen.view.*
 import javax.inject.Inject
 
-class UserDetailsFragment : BaseFragment(), UserDetailsMVP.View {
+class UserDetailsFragment : BaseFragment(),
+    UserDetailsMVP.View {
 
     private lateinit var _presenter: UserDetailsMVP.Presenter
     private lateinit var activity: MainActivity
@@ -56,7 +58,11 @@ class UserDetailsFragment : BaseFragment(), UserDetailsMVP.View {
         }
 
         (activity.applicationContext as MainApplication).component.inject(this)
-        _presenter = UserDetailsPresenter(this, apiService)
+        _presenter =
+            UserDetailsPresenter(
+                this,
+                apiService
+            )
         mTimelineList = ArrayList()
         _presenter.getUserDetails(currentUser)
     }

@@ -1,4 +1,4 @@
-package com.simplertutorials.android.githubtimeline.ui.fragments
+package com.simplertutorials.android.githubtimeline.ui.fragments.SearchScreen
 
 import com.simplertutorials.android.githubtimeline.data.api.ApiService
 import com.simplertutorials.android.githubtimeline.domain.User
@@ -33,7 +33,11 @@ class SearchScreenPresenterTest {
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { c: Callable<Scheduler?>? -> Schedulers.trampoline() }
         apiService = mock(ApiService::class.java)
         view = mock(SearchScreenMVP.View::class.java)
-        presenter = SearchScreenPresenter(view, apiService)
+        presenter =
+            SearchScreenPresenter(
+                view,
+                apiService
+            )
     }
 
     /*
