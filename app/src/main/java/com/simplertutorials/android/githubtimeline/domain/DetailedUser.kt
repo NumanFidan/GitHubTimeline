@@ -16,12 +16,13 @@ open class DetailedUser ():
     @SerializedName("following")
     var followingCount:Int?= null
 
-    constructor(userName:String, location:String, siteUrl:String, followerCount:Int, followingCount:Int) : this() {
+    constructor(userName:String, location:String, siteUrl:String, followerCount:Int, followingCount:Int, loginName:String) : this() {
         this.userName = userName
         this.location = location
         this.siteUrl = siteUrl
         this.followerCount = followerCount
         this.followingCount = followingCount
+        this.loginName = loginName
     }
     constructor(detailedUser: DetailedUser) : this() {
         this.userName = detailedUser.userName
@@ -29,6 +30,7 @@ open class DetailedUser ():
         this.siteUrl = detailedUser.siteUrl
         this.followerCount = detailedUser.followerCount
         this.followingCount = detailedUser.followingCount
+        this.loginName = detailedUser.loginName
     }
     override fun toString(): String {
         if (loginName!= null)
