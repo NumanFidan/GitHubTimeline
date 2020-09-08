@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:animateLayoutChanges="true"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/main_screen_github_logo"
+        android:layout_width="256dp"
+        android:layout_height="256sp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/github_icon_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/github_logo" />
+
+    <Button
+        android:id="@+id/main_screen_user_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:transitionName="sharedImage"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/user_search_button_background"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/user"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/main_screen_repository_btn"
+        app:layout_constraintTop_toBottomOf="@+id/main_screen_search_on_github" />
+
+    <Button
+        android:id="@+id/main_screen_repository_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/repo_search_button_background"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/repository"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/main_screen_user_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_screen_search_on_github" />
+
+    <TextView
+        android:id="@+id/main_screen_recent_searches_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/recent_searches"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_screen_repository_btn" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/main_screen_recent_searches_recyclerview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_screen_recent_searches_text" />
+
+    <TextView
+        android:id="@+id/main_screen_search_on_github"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/search_on_github"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_screen_github_logo" />
+</androidx.constraintlayout.widget.ConstraintLayout>
