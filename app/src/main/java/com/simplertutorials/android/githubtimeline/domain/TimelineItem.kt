@@ -1,19 +1,15 @@
 package com.simplertutorials.android.githubtimeline.domain
 
-import android.util.Log
 import com.google.gson.annotations.SerializedName
-import java.io.FileDescriptor
-import java.lang.Exception
-import java.lang.NumberFormatException
 
 class TimelineItem(
     @SerializedName("name") var repoName: String,
-    repoDescripton: String,
+    repoDescription: String,
     created_at: String
 ) : Comparable<TimelineItem> {
 
     @SerializedName("description")
-    var repoDescription: String = repoDescripton
+    var repoDescription: String = repoDescription
 
     @SerializedName("url")
     var repoUrl: String? = null
@@ -38,8 +34,8 @@ class TimelineItem(
     }
 
     override fun toString(): String {
-//        return "+\n*** " + repoName + "\n" + repoDescription + "\n" + repoUrl + "\n" + repoCreatedAt + "\n" + repoUpdatedAt + "\n" + repoLanguage + "\n"
-        return "\n" + repoCreatedAt
+        return "*** " + repoName + "," + repoDescription + "," + repoUrl + "," + repoCreatedAt + "," + repoUpdatedAt + "," + repoLanguage + ","
+//        return "\n" + repoCreatedAt
     }
 
     override fun compareTo(other: TimelineItem): Int {
