@@ -5,7 +5,8 @@ import com.simplertutorials.android.githubtimeline.data.api.ApiService
 import com.simplertutorials.android.githubtimeline.domain.DetailedUser
 import com.simplertutorials.android.githubtimeline.domain.TimelineItem
 import com.simplertutorials.android.githubtimeline.domain.User
-import java.util.ArrayList
+import io.reactivex.Observable
+import java.util.*
 
 class UserDetailsPresenter(
     private val view: UserDetailsMVP.View,
@@ -28,13 +29,12 @@ class UserDetailsPresenter(
         subscriptions.add(disposable)
     }
 
-    private fun getUserTimeline(n: DetailedUser?) {
+    override fun getUserTimeline(n: DetailedUser?) {
         //get user repo list from API
         //in the end sort the list by date and notify the view about data change
         view.showLoading()
         view.timelineList.clear()
-        val disposable = ApiRepository.getInstance()
-            .getUserTimeline(apiService, n?.loginName)
+        val disposable = getUserTimelineObservable(n)
             .subscribe({ n ->
                 view.timelineList.addAll(n)
                 sortList(view.timelineList)
@@ -47,10 +47,15 @@ class UserDetailsPresenter(
                 })
         subscriptions.add(disposable)
     }
+    fun getUserTimelineObservable(n:DetailedUser?): Observable<MutableList<TimelineItem>> {
+        return ApiRepository.getInstance()
+            .getUserTimeline(apiService, n?.loginName)
+    }
 
-    private fun sortList(timelineList: ArrayList<TimelineItem>) {
+    override fun sortList(timelineList: ArrayList<TimelineItem>) {
         //sort the list by repo creating date
-        val orderedList = quickSort(timelineList)
+        val orderedList = mutableListOf<TimelineItem>()
+        orderedList += quickSort(timelineList)
         timelineList.clear()
         timelineList.addAll(orderedList)
     }

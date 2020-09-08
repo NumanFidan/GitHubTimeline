@@ -13,11 +13,11 @@ interface UserDetailsMVP : BaseMVP {
         fun hideLoading()
         fun showLoading()
         fun refreshTimelineRecyclerView()
-
-
     }
 
     interface Presenter : BaseMVP.Presenter {
         fun getUserDetails(currentUser: User)
+        fun getUserTimeline(detailedUser: DetailedUser?)
+        fun sortList(timelineList: java.util.ArrayList<TimelineItem>)
     }
 }

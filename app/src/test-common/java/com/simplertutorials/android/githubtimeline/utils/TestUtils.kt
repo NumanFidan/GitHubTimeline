@@ -30,11 +30,23 @@ class TestUtils {
             "Berlin",
             "https://www.github.com",
             12,
-            12)
+            12,
+            detailedUserName)
 
         const val userName = "foo"
 
         @JvmStatic
         val user= User(detailedUserName)
+
+        const val invalidUserName = "ghjghjghjghjghj"
+
+        @JvmStatic
+        val invalidDetailedUser = DetailedUser(
+            invalidUserName,
+            "Berlin",
+            "https://www.github.com",
+            12,
+            12,
+            invalidUserName)
     }
 }
