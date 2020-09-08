@@ -2,12 +2,14 @@ package com.simplertutorials.android.githubtimeline.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.simplertutorials.android.githubtimeline.MainApplication
 import com.simplertutorials.android.githubtimeline.R
 import com.simplertutorials.android.githubtimeline.data.api.ApiService
 import com.simplertutorials.android.githubtimeline.domain.User
+import com.simplertutorials.android.githubtimeline.ui.fragments.MainScreenFragment
 import com.simplertutorials.android.githubtimeline.ui.fragments.SearchScreenFragment
 import com.simplertutorials.android.githubtimeline.ui.fragments.UserDetailsFragment
 import javax.inject.Inject
@@ -25,7 +27,13 @@ class MainActivity : AppCompatActivity() {
 
         (applicationContext as MainApplication).component.inject(this)
 //        loadDetailsFragment()
-        loadSearchFragment()
+//        loadSearchFragment()
+        loadMainScreenFragment()
+    }
+
+    private fun loadMainScreenFragment() {
+
+        this.changeFragment(R.id.container, MainScreenFragment())
     }
 
     private fun loadDetailsFragment() {
@@ -51,10 +59,12 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         //if user at details Screen than return the user to the search scree
         //in other cases let Activity handle it by itself
-        var fragment = supportFragmentManager.findFragmentById(R.id.container)
-        if (fragment is UserDetailsFragment)
-            changeFragment(R.id.container, SearchScreenFragment())
-        else
-            super.onBackPressed()
+        val fragment = supportFragmentManager.findFragmentById(R.id.container)
+
+        when (fragment) {
+            is UserDetailsFragment -> changeFragment(R.id.container, SearchScreenFragment())
+            is SearchScreenFragment -> changeFragment(R.id.container, MainScreenFragment())
+            else -> super.onBackPressed()
+        }
     }
 }
