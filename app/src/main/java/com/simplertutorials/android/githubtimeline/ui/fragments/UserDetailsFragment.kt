@@ -143,12 +143,12 @@ class UserDetailsFragment : BaseFragment(), UserDetailsMVP.View {
         userName.text = user.userName ?: ""
         loginName.text = user.loginName ?: ""
         Picasso.with(context).load(user.avatarUrl).into(userAvatar)
-        if (user.location != null)
+        if (user.location != null && !user.location.equals(""))
             userLocation.text = user.location
         else
             userLocationLayout.visibility = View.GONE
 
-        if (user.siteUrl != null)
+        if (user.siteUrl != null && !user.siteUrl.equals(""))
             userSite.text = user.siteUrl
         else
             userSiteLayout.visibility = View.GONE
