@@ -2,4 +2,10 @@
     <string name="app_name">GitHub Timeline</string>
     <string name="no_user_found">No user found!</string>
     <string name="communication_error">Communication Error with the server</string>
+    <string name="user">User</string>
+    <string name="repository">Repository</string>
+    <string name="recent_searches">Recent Searches</string>
+    <string name="search_on_github">Search On Github</string>
+    <string name="github_logo">Github Logo</string>
+    <string name="type_a_username">Type a username...</string>
 </resources>
