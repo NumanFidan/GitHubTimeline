@@ -1,4 +1,4 @@
-package com.simplertutorials.android.githubtimeline.ui.fragments.UserDetails
+package com.simplertutorials.android.githubtimeline.ui.fragments.userDetails
 
 import com.simplertutorials.android.githubtimeline.data.api.ApiRepository
 import com.simplertutorials.android.githubtimeline.data.api.ApiService

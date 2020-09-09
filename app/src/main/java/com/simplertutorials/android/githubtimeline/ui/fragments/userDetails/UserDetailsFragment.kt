@@ -1,4 +1,4 @@
-package com.simplertutorials.android.githubtimeline.ui.fragments.UserDetails
+package com.simplertutorials.android.githubtimeline.ui.fragments.userDetails
 
 import android.annotation.SuppressLint
 import android.content.Context

@@ -1,4 +1,4 @@
-package com.simplertutorials.android.githubtimeline.ui.fragments.MainScreen
+package com.simplertutorials.android.githubtimeline.ui.fragments.mainScreen
 
 import com.simplertutorials.android.githubtimeline.ui.fragments.BaseMVP
 

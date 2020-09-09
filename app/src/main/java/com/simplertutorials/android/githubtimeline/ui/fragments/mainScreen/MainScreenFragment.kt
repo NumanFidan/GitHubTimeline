@@ -1,4 +1,4 @@
-package com.simplertutorials.android.githubtimeline.ui.fragments.MainScreen
+package com.simplertutorials.android.githubtimeline.ui.fragments.mainScreen
 
 import android.animation.Animator
 import android.animation.IntEvaluator
@@ -14,7 +14,7 @@ import androidx.transition.*
 import com.simplertutorials.android.githubtimeline.R
 import com.simplertutorials.android.githubtimeline.ui.MainActivity
 import com.simplertutorials.android.githubtimeline.ui.fragments.BaseFragment
-import com.simplertutorials.android.githubtimeline.ui.fragments.SearchScreen.SearchScreenFragment
+import com.simplertutorials.android.githubtimeline.ui.fragments.searchScreen.SearchScreenFragment
 import kotlinx.android.synthetic.main.main_screen_fragment.view.*
 
 

@@ -8,9 +8,9 @@ import com.simplertutorials.android.githubtimeline.MainApplication
 import com.simplertutorials.android.githubtimeline.R
 import com.simplertutorials.android.githubtimeline.data.api.ApiService
 import com.simplertutorials.android.githubtimeline.domain.User
-import com.simplertutorials.android.githubtimeline.ui.fragments.MainScreen.MainScreenFragment
-import com.simplertutorials.android.githubtimeline.ui.fragments.SearchScreen.SearchScreenFragment
-import com.simplertutorials.android.githubtimeline.ui.fragments.UserDetails.UserDetailsFragment
+import com.simplertutorials.android.githubtimeline.ui.fragments.mainScreen.MainScreenFragment
+import com.simplertutorials.android.githubtimeline.ui.fragments.searchScreen.SearchScreenFragment
+import com.simplertutorials.android.githubtimeline.ui.fragments.userDetails.UserDetailsFragment
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {

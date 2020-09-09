@@ -1,4 +1,4 @@
-package com.simplertutorials.android.githubtimeline.ui.fragments.UserDetails
+package com.simplertutorials.android.githubtimeline.ui.fragments.userDetails
 
 import com.simplertutorials.android.githubtimeline.domain.DetailedUser
 import com.simplertutorials.android.githubtimeline.domain.TimelineItem

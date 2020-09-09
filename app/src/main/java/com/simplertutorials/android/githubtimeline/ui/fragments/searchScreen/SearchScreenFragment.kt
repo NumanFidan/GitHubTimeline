@@ -1,4 +1,4 @@
-package com.simplertutorials.android.githubtimeline.ui.fragments.SearchScreen
+package com.simplertutorials.android.githubtimeline.ui.fragments.searchScreen
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -19,7 +19,7 @@ import com.simplertutorials.android.githubtimeline.ui.MainActivity
 import com.simplertutorials.android.githubtimeline.ui.adapters.SuggestionsAdapter
 import com.simplertutorials.android.githubtimeline.ui.customListeners.UserSuggestionOnClick
 import com.simplertutorials.android.githubtimeline.ui.fragments.BaseFragment
-import com.simplertutorials.android.githubtimeline.ui.fragments.UserDetails.UserDetailsFragment
+import com.simplertutorials.android.githubtimeline.ui.fragments.userDetails.UserDetailsFragment
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

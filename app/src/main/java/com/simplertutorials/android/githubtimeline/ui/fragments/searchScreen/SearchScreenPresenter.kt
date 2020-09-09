@@ -1,4 +1,4 @@
-package com.simplertutorials.android.githubtimeline.ui.fragments.SearchScreen
+package com.simplertutorials.android.githubtimeline.ui.fragments.searchScreen
 
 import com.simplertutorials.android.githubtimeline.R
 import com.simplertutorials.android.githubtimeline.data.api.ApiRepository
