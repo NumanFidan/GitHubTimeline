@@ -1,5 +1,6 @@
 package com.simplertutorials.android.githubtimeline.utils
 
-enum class SearchTypeEnum {
-    USER, REPOSITORY
+enum class SearchTypeEnum (val type:String){
+    USER("User"),
+    REPOSITORY("Repository")
 }
