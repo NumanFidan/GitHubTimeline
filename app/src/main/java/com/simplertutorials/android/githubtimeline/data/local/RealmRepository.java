@@ -1,33 +1,53 @@
 package com.simplertutorials.android.githubtimeline.data.local;
 
+import android.os.Build;
+import androidx.annotation.RequiresApi;
 import com.simplertutorials.android.githubtimeline.domain.RecentSearchItem;
+import com.simplertutorials.android.githubtimeline.domain.Repository;
 import com.simplertutorials.android.githubtimeline.domain.User;
+import java.util.Date;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import io.realm.RealmResults;
+import okhttp3.internal.http.RealInterceptorChain;
 
-import java.util.List;
-
-import io.reactivex.Observable;
-
+@Singleton
 public class RealmRepository {
-    private static RealmRepository instance;
 
-    private RealmRepository() {
+    private RealmInterface realmService;
 
+    @Inject
+    public RealmRepository(RealmService realmService) {
+        this.realmService = realmService;
     }
 
-    public static RealmRepository getInstance() {
-        if (instance == null)
-            instance = new RealmRepository();
-        return instance;
+    public RealmRepository(RealmInterface realmInterface) {
+        this.realmService = realmInterface;
     }
 
-    public Observable<List<RecentSearchItem>> getRecentSearches(RealmService realmService) throws Exception {
-        // TODO: 9/10/2020
-        return null;
+    public RealmResults<RecentSearchItem> getRecentSearches() throws Exception {
+        return realmService.getRecentSearchesFromRealm();
     }
 
-
-    public boolean writeToRecentSearches(RealmService realmService, User user) throws Exception {
-        // TODO: 9/10/2020
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public boolean writeToRecentSearches(Object object) throws Exception {
+        realmService.writeRecentSearchToRealm(objectToRecentSearchItem(object));
         return false;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private RecentSearchItem objectToRecentSearchItem(Object object) throws Exception {
+        RecentSearchItem recentSearchItem;
+
+        if (object instanceof User)
+            recentSearchItem = new RecentSearchItem((User)object);
+        else if (object instanceof Repository)
+            recentSearchItem = new RecentSearchItem((Repository) object);
+        else
+            throw new Exception();
+
+        Date date = new Date(System.currentTimeMillis());
+        recentSearchItem.date = date;
+        return recentSearchItem;
     }
 }
