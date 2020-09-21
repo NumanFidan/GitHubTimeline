@@ -1,7 +1,9 @@
 package com.simplertutorials.android.githubtimeline.ui.fragments.userDetails
 
+import com.simplertutorials.android.githubtimeline.data.api.ApiRepository
 import com.simplertutorials.android.githubtimeline.data.api.ApiService
 import com.simplertutorials.android.githubtimeline.domain.DetailedUser
+import com.simplertutorials.android.githubtimeline.domain.SearchItem
 import com.simplertutorials.android.githubtimeline.domain.TimelineItem
 import com.simplertutorials.android.githubtimeline.domain.User
 import com.simplertutorials.android.githubtimeline.utils.TestUtils
@@ -23,19 +25,19 @@ class UserDetailsPresenterTest {
     //System under test
     lateinit var presenter: UserDetailsPresenter
 
-    lateinit var apiService: ApiService
+    lateinit var apiRepository: ApiRepository
     lateinit var view: UserDetailsMVP.View
 
     @BeforeEach
     fun init() {
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { c: Callable<Scheduler?>? -> Schedulers.trampoline() }
 
-        apiService = mock(ApiService::class.java)
+        apiRepository = mock(ApiRepository::class.java)
         view = mock(UserDetailsMVP.View::class.java)
         presenter =
             UserDetailsPresenter(
                 view,
-                apiService
+                apiRepository
             )
     }
 
@@ -48,15 +50,15 @@ class UserDetailsPresenterTest {
     fun getUserDetails_withValidUser_successful() {
         //Arrange ApiService
         val expectedSingle = DetailedUser(TestUtils.detailedUser)
-        val expectedReturn = Single.just(expectedSingle)
-        `when`(apiService.getUser(anyString())).thenReturn(expectedReturn)
+        val expectedReturn = Observable.just(expectedSingle)
+        `when`(apiRepository.getUser(anyString())).thenReturn(expectedReturn)
 
         //Arrange View
         val argument = ArgumentCaptor.forClass(DetailedUser::class.java)
 
         //Act
         val user = User(TestUtils.user)
-        presenter.getUserDetails(user)
+        presenter.getUserDetails(SearchItem(user))
 
         //Check
         verify(view).fillUserDetails(argument.capture())
@@ -72,12 +74,12 @@ class UserDetailsPresenterTest {
     @Order(2)
     fun getUserDetails_withInvalidUser_errorHandled() {
         //Arrange ApiService
-        val expectedReturn = Single.error<DetailedUser>(Exception())
-        `when`(apiService.getUser(anyString())).thenReturn(expectedReturn)
+        val expectedReturn = Observable.error<DetailedUser>(Exception())
+        `when`(apiRepository.getUser(anyString())).thenReturn(expectedReturn)
 
         //Act
         val user = User(TestUtils.user)
-        presenter.getUserDetails(user)
+        presenter.getUserDetails(SearchItem(user))
 
         //Check
         verify(view).showToast(ArgumentMatchers.any())
@@ -94,7 +96,7 @@ class UserDetailsPresenterTest {
     fun getUserTimeline_withInvalidUserName_handleServerError(){
         //Arrange ApiService
         val expectedReturn = Observable.error<List<TimelineItem>>(Exception())
-        `when`(apiService.getTimelineItems(ArgumentMatchers.anyString())).thenReturn(expectedReturn)
+        `when`(apiRepository.getUserTimeline(ArgumentMatchers.anyString())).thenReturn(expectedReturn)
 
         //Arrange View
         val timelineList = ArrayList<TimelineItem>()
@@ -136,26 +138,3 @@ class UserDetailsPresenterTest {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

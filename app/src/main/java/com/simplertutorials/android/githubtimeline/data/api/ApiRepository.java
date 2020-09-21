@@ -1,31 +1,30 @@
 package com.simplertutorials.android.githubtimeline.data.api;
 
 import com.simplertutorials.android.githubtimeline.domain.DetailedUser;
+import com.simplertutorials.android.githubtimeline.domain.SearchItem;
 import com.simplertutorials.android.githubtimeline.domain.TimelineItem;
-import com.simplertutorials.android.githubtimeline.domain.UserSearchApiResponse;
 import com.simplertutorials.android.githubtimeline.utils.EmptyUserNameException;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+@Singleton
 public class ApiRepository {
-    private static ApiRepository instance;
+    private ApiService apiService;
     public final String emptyUserNameMessage = "Empty User Name";
 
-    private ApiRepository() {
-
+    @Inject
+    public ApiRepository(ApiService apiService) {
+        this.apiService = apiService;
     }
-
-    public static ApiRepository getInstance() {
-        if (instance == null)
-            instance = new ApiRepository();
-        return instance;
-    }
-
-    public Observable<List<TimelineItem>> getUserTimeline(ApiService apiService, String username) throws Exception{
+    public Observable<List<TimelineItem>> getUserTimeline(String username) throws Exception{
         if (username.equals(""))
             throw new EmptyUserNameException(emptyUserNameMessage);
         return apiService.getTimelineItems(username)
@@ -34,8 +33,7 @@ public class ApiRepository {
 
     }
 
-
-    public Observable<DetailedUser> getUser(ApiService apiService, String username) throws Exception {
+    public Observable<DetailedUser> getUser(String username) throws Exception {
         if (username.equals("")){
             System.out.println("Empty User name");
             throw new EmptyUserNameException(emptyUserNameMessage);
@@ -44,15 +42,18 @@ public class ApiRepository {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable();
-
     }
 
-    public Observable<UserSearchApiResponse> searchUser (ApiService apiService, String username) throws Exception {
+    public Single<List<SearchItem>> searchUser (String username) throws Exception {
         if (username.equals(""))
             throw new EmptyUserNameException(emptyUserNameMessage);
         return apiService.getUserList(username)
+                .map(item -> item.getUsers())
+                .toObservable()
+                .flatMapIterable(list -> list)
+                .map(item -> new SearchItem(item))
+                .toList()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .toObservable();
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

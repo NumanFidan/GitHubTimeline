@@ -1,24 +1,23 @@
 package com.simplertutorials.android.githubtimeline.ui.fragments.userDetails
 
 import com.simplertutorials.android.githubtimeline.data.api.ApiRepository
-import com.simplertutorials.android.githubtimeline.data.api.ApiService
 import com.simplertutorials.android.githubtimeline.domain.DetailedUser
+import com.simplertutorials.android.githubtimeline.domain.SearchItem
 import com.simplertutorials.android.githubtimeline.domain.TimelineItem
-import com.simplertutorials.android.githubtimeline.domain.User
 import com.simplertutorials.android.githubtimeline.ui.fragments.BasePresenter
 import io.reactivex.Observable
 import java.util.*
 
 class UserDetailsPresenter(
     private val view: UserDetailsMVP.View,
-    private val apiService: ApiService
+    private val apiRepository: ApiRepository
 ) : BasePresenter(view), UserDetailsMVP.Presenter {
 
-    override fun getUserDetails(currentUser: User) {
+    override fun getUserDetails(passedSearchItem: SearchItem) {
         //get User Data from API
         //at the end call API again to get user's repo list
-        val disposable = ApiRepository.getInstance()
-            .getUser(apiService, currentUser.loginName)
+        val disposable =apiRepository
+            .getUser(passedSearchItem.name)
             .subscribe({ n ->
                 view.fillUserDetails(n)
                 getUserTimeline(n)
@@ -49,8 +48,8 @@ class UserDetailsPresenter(
         subscriptions.add(disposable)
     }
     fun getUserTimelineObservable(n:DetailedUser?): Observable<MutableList<TimelineItem>> {
-        return ApiRepository.getInstance()
-            .getUserTimeline(apiService, n?.loginName)
+        return apiRepository
+            .getUserTimeline(n?.loginName)
     }
 
     override fun sortList(timelineList: ArrayList<TimelineItem>) {

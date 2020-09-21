@@ -13,8 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.simplertutorials.android.githubtimeline.MainApplication
 import com.simplertutorials.android.githubtimeline.R
-import com.simplertutorials.android.githubtimeline.data.api.ApiService
-import com.simplertutorials.android.githubtimeline.domain.User
+import com.simplertutorials.android.githubtimeline.data.api.ApiRepository
+import com.simplertutorials.android.githubtimeline.data.local.RealmRepository
+import com.simplertutorials.android.githubtimeline.domain.SearchItem
 import com.simplertutorials.android.githubtimeline.ui.MainActivity
 import com.simplertutorials.android.githubtimeline.ui.adapters.SuggestionsAdapter
 import com.simplertutorials.android.githubtimeline.ui.customListeners.UserSuggestionOnClick
@@ -35,12 +36,14 @@ open class SearchScreenFragment : BaseFragment(), UserSuggestionOnClick,
     private lateinit var _presenter: SearchScreenPresenter
     private lateinit var activity: MainActivity
     private lateinit var recyclerViewAdapter: SuggestionsAdapter
-    private lateinit var mSuggestionsList: ArrayList<User>
+    private lateinit var mSuggestionsList: ArrayList<SearchItem>
     private lateinit var searchBox: EditText
-    private lateinit var suggestionsBehaviourSubject: BehaviorSubject<List<User>>
+    private lateinit var suggestionsBehaviourSubject: BehaviorSubject<List<SearchItem>>
 
     @Inject
-    lateinit var apiService: ApiService
+    lateinit var apiRepository: ApiRepository
+    @Inject
+    lateinit var realmRepository: RealmRepository
 
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,10 +52,10 @@ open class SearchScreenFragment : BaseFragment(), UserSuggestionOnClick,
         _presenter =
             SearchScreenPresenter(
                 this,
-                apiService
+                apiRepository,
+                realmRepository
             )
-        mSuggestionsList = ArrayList<User>()
-
+        mSuggestionsList = ArrayList<SearchItem>()
     }
 
     override fun onCreateView(
@@ -107,11 +110,10 @@ open class SearchScreenFragment : BaseFragment(), UserSuggestionOnClick,
         }
     }
 
-    override val behaviorSubject: BehaviorSubject<List<User>>
+    override val behaviorSubject: BehaviorSubject<List<SearchItem>>
         get() = this.suggestionsBehaviourSubject
-    override val suggestionsList: ArrayList<User>
+    override val suggestionsList: ArrayList<SearchItem>
         get() = this.mSuggestionsList
-
 
     override fun searchBoxObservable(): Observable<String>? {
         //create observable to observe typing in Search Box
@@ -152,7 +154,6 @@ open class SearchScreenFragment : BaseFragment(), UserSuggestionOnClick,
         searchBox.error = message
     }
 
-
     fun setProgressBarVisibility(userTyping: Boolean) {
         //show progressbar to  the user or hide it and show suggestions
         if (userTyping) {
@@ -170,12 +171,14 @@ open class SearchScreenFragment : BaseFragment(), UserSuggestionOnClick,
         recyclerViewAdapter.notifyDataSetChanged()
     }
 
-    override fun onUserSuggestionClicked(user: User) {
+    override fun onUserSuggestionClicked(searchItem: SearchItem) {
+        //write Search to Realm
+        _presenter.writeUserToRealm(searchItem);
         //pass user to the UserDetails screen
         val fragment =
             UserDetailsFragment()
         val args = Bundle()
-        args.putParcelable(ARG_USER_PARAM, user)
+        args.putParcelable(ARG_USER_PARAM, searchItem)
         fragment.arguments = args
         activity.changeFragment(R.id.container, fragment)
     }

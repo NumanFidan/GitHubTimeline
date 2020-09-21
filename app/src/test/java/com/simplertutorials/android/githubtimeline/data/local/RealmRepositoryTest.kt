@@ -1,15 +1,9 @@
 package com.simplertutorials.android.githubtimeline.data.local
 
 import com.nhaarman.mockitokotlin2.whenever
-import com.simplertutorials.android.githubtimeline.domain.RecentSearchItem
 import com.simplertutorials.android.githubtimeline.domain.Repository
 import com.simplertutorials.android.githubtimeline.domain.User
 import com.simplertutorials.android.githubtimeline.utils.TestUtils
-import io.reactivex.Flowable
-import io.realm.Realm
-import io.realm.RealmConfiguration
-import io.realm.RealmObject
-import io.realm.RealmResults
 import org.junit.jupiter.api.*
 import org.mockito.Mockito
 import org.mockito.Mockito.*
@@ -20,12 +14,12 @@ class RealmRepositoryTest {
     //System under test
     lateinit var realmRepository: RealmRepository
 
-    lateinit var realmInterface: RealmInterface
+    lateinit var realmServiceInterface: RealmServiceInterface
 
     @BeforeEach
     fun init() {
-        realmInterface = mock(RealmInterface::class.java)
-        realmRepository = RealmRepository(realmInterface)
+        realmServiceInterface = mock(RealmServiceInterface::class.java)
+        realmRepository = RealmRepository(realmServiceInterface)
     }
 
     @AfterEach
@@ -49,13 +43,13 @@ class RealmRepositoryTest {
     fun writeToRecentSearches_passAnUser_realmServiceCalled() {
         //arrange
         val user = User(TestUtils.user)
-        doNothing().whenever(realmInterface).writeRecentSearchToRealm(anyObject())
+        doNothing().whenever(realmServiceInterface).writeRecentSearchToRealm(anyObject())
 
         //Act
         realmRepository.writeToRecentSearches(user)
 
         //Check
-        verify(realmInterface).writeRecentSearchToRealm(anyObject())
+        verify(realmServiceInterface).writeRecentSearchToRealm(anyObject())
     }
 
     /*
@@ -67,13 +61,13 @@ class RealmRepositoryTest {
     fun writeToRecentSearches_passAnRepository_realmServiceCalled() {
         //arrange
         val repository = Repository("userName", "description", "Kotlin")
-        doNothing().whenever(realmInterface).writeRecentSearchToRealm(anyObject())
+        doNothing().whenever(realmServiceInterface).writeRecentSearchToRealm(anyObject())
 
         //Act
         realmRepository.writeToRecentSearches(repository)
 
         //Check
-        verify(realmInterface).writeRecentSearchToRealm(anyObject())
+        verify(realmServiceInterface).writeRecentSearchToRealm(anyObject())
     }
 
     /*
@@ -86,7 +80,7 @@ class RealmRepositoryTest {
     fun writeToRecentSearches_passAnInvalidObject_throwException() {
         //arrange
         val inValidObject = "inValidObject"
-        doNothing().whenever(realmInterface).writeRecentSearchToRealm(anyObject())
+        doNothing().whenever(realmServiceInterface).writeRecentSearchToRealm(anyObject())
 
         //Act
 
@@ -94,6 +88,6 @@ class RealmRepositoryTest {
         Assertions.assertThrows(Exception::class.java) {
             realmRepository.writeToRecentSearches(inValidObject)
         }
-        verifyNoMoreInteractions(realmInterface)
+        verifyNoMoreInteractions(realmServiceInterface)
     }
 }

@@ -1,6 +1,7 @@
 package com.simplertutorials.android.githubtimeline.ui.fragments.userDetails
 
 import com.simplertutorials.android.githubtimeline.domain.DetailedUser
+import com.simplertutorials.android.githubtimeline.domain.SearchItem
 import com.simplertutorials.android.githubtimeline.domain.TimelineItem
 import com.simplertutorials.android.githubtimeline.domain.User
 import com.simplertutorials.android.githubtimeline.ui.fragments.BaseMVP
@@ -19,7 +20,7 @@ interface UserDetailsMVP :
 
     interface Presenter :
         BaseMVP.Presenter {
-        fun getUserDetails(currentUser: User)
+        fun getUserDetails(passedSearchItem: SearchItem)
         fun getUserTimeline(detailedUser: DetailedUser?)
         fun sortList(timelineList: java.util.ArrayList<TimelineItem>)
     }

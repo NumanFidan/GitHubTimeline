@@ -1,6 +1,9 @@
 package com.simplertutorials.android.githubtimeline.ui.fragments.searchScreen
 
+import com.simplertutorials.android.githubtimeline.data.api.ApiRepository
 import com.simplertutorials.android.githubtimeline.data.api.ApiService
+import com.simplertutorials.android.githubtimeline.data.local.RealmRepository
+import com.simplertutorials.android.githubtimeline.domain.SearchItem
 import com.simplertutorials.android.githubtimeline.domain.User
 import com.simplertutorials.android.githubtimeline.domain.UserSearchApiResponse
 import com.simplertutorials.android.githubtimeline.utils.EmptyUserNameException
@@ -11,12 +14,10 @@ import io.reactivex.Single
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
-import org.junit.jupiter.api.Order
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestMethodOrder
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 import java.util.concurrent.Callable
 
@@ -26,38 +27,45 @@ class SearchScreenPresenterTest {
     lateinit var presenter: SearchScreenPresenter
 
     lateinit var view: SearchScreenMVP.View
-    lateinit var apiService: ApiService
+    lateinit var apiRepository: ApiRepository
+    lateinit var realmRepository: RealmRepository
 
     @BeforeEach
     fun init() {
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { c: Callable<Scheduler?>? -> Schedulers.trampoline() }
-        apiService = mock(ApiService::class.java)
+        apiRepository = mock(ApiRepository::class.java)
+        realmRepository = mock(RealmRepository::class.java)
         view = mock(SearchScreenMVP.View::class.java)
         presenter =
             SearchScreenPresenter(
                 view,
-                apiService
+                apiRepository,
+                realmRepository
             )
     }
 
+    @AfterEach
+    fun validate() {
+        validateMockitoUsage()
+    }
     /*
         Subscribe to searchbox
         check if emitting changes work
-        verify searchBoxObservable only one called
-        verify suggestions passign to the behaviourSubject
+        verify searchBoxObservable only once called
+        verify suggestions passing to the behaviourSubject
      */
     @Test
     @Order(1)
     fun subscribeToSearchBox_emittingChangesFromSearchBoxWorks_TriggeredBehaviourObject() {
 
         //Arrange Api Service
-        val expectedResponse = UserSearchApiResponse(listOf<User>(User(TestUtils.user)))
+        val expectedResponse = listOf<SearchItem>(SearchItem(TestUtils.user))
         val expectedSingle = Single.just(expectedResponse)
-        `when`(apiService.getUserList(anyString())).thenReturn(expectedSingle)
+        `when`(apiRepository.searchUser(ArgumentMatchers.anyString())).thenReturn(expectedSingle)
         //Arrange view
         val observable = Observable.just("username")
         `when`(view.searchBoxObservable()).thenReturn(observable)
-        val behaviorSubject: BehaviorSubject<List<User>> = BehaviorSubject.create()
+        val behaviorSubject: BehaviorSubject<List<SearchItem>> = BehaviorSubject.create()
         `when`(view.behaviorSubject).thenReturn(behaviorSubject)
 
         //Act
@@ -101,7 +109,7 @@ class SearchScreenPresenterTest {
     @Order(3)
     fun subscribeToSearchBox_callApiWithEmptyText_suggestionCleared() {
 
-        val behaviorSubject: BehaviorSubject<List<User>> =
+        val behaviorSubject: BehaviorSubject<List<SearchItem>> =
             BehaviorSubject.createDefault(listOf())
         `when`(view.behaviorSubject).thenReturn(behaviorSubject)
 
@@ -127,13 +135,12 @@ class SearchScreenPresenterTest {
     fun subscribeToSearchBox_callApiWithValidUserName_BehaviourSubjectTriggered() {
 
         //Arrange Api Service
-        val expectedResponse = UserSearchApiResponse(listOf<User>(User(TestUtils.user)))
+        val expectedResponse = listOf<SearchItem>(SearchItem(TestUtils.user))
         val expectedSingle = Single.just(expectedResponse)
-        `when`(apiService.getUserList(anyString())).thenReturn(expectedSingle)
+        `when`(apiRepository.searchUser(anyString())).thenReturn(expectedSingle)
 
         //Arrange BehaviourObject
-        val user = User(User(TestUtils.user))
-        val behaviorSubject: BehaviorSubject<List<User>> =
+        val behaviorSubject: BehaviorSubject<List<SearchItem>> =
             BehaviorSubject.create()
         `when`(view.behaviorSubject).thenReturn(behaviorSubject)
 
@@ -141,12 +148,13 @@ class SearchScreenPresenterTest {
         presenter.callApi("username")
 
         //Check
-        verify(apiService, times(1)).getUserList(anyString())
+        verify(apiRepository, times(1)).searchUser(anyString())
         verify(view, times(1)).behaviorSubject
         verify(view, times(1)).suggestionsRefreshed()
         verify(view, times(0)).showTextInputLayoutError(anyString())
 
     }
+
     /*
         mock ApiService with empty onNext
         Call callApi funtion with a invalid username
@@ -160,12 +168,12 @@ class SearchScreenPresenterTest {
 
         //Arrange Api Service
         val invalidUserName = "ghjghjghjghjghj"
-        val expectedResponse = UserSearchApiResponse(listOf<User>())
+        val expectedResponse = listOf<SearchItem>()
         val expectedSingle = Single.just(expectedResponse)
-        `when`(apiService.getUserList(anyString())).thenReturn(expectedSingle)
+        `when`(apiRepository.searchUser(anyString())).thenReturn(expectedSingle)
 
         //Arrange BehaviourObject
-        val behaviorSubject: BehaviorSubject<List<User>> =
+        val behaviorSubject: BehaviorSubject<List<SearchItem>> =
             BehaviorSubject.create()
         `when`(view.behaviorSubject).thenReturn(behaviorSubject)
 
@@ -173,7 +181,7 @@ class SearchScreenPresenterTest {
         presenter.callApi(invalidUserName)
 
         //Check
-        verify(apiService, times(1)).getUserList(anyString())
+        verify(apiRepository, times(1)).searchUser(anyString())
         verify(view, times(1)).behaviorSubject
         verify(view, times(1)).suggestionsRefreshed()
         verify(view, times(1)).showTextInputLayoutError(anyString())

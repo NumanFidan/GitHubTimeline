@@ -34,7 +34,6 @@ class TimelineAdapter(
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: TimelineHolder, position: Int) {
         adjustEffectsVisibility(holder, position)
         holder.repoDate.text = visualizeDate(position)

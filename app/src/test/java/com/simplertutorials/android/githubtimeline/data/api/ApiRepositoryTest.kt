@@ -1,9 +1,6 @@
 package com.simplertutorials.android.githubtimeline.data.api
 
-import com.simplertutorials.android.githubtimeline.domain.DetailedUser
-import com.simplertutorials.android.githubtimeline.domain.TimelineItem
-import com.simplertutorials.android.githubtimeline.domain.User
-import com.simplertutorials.android.githubtimeline.domain.UserSearchApiResponse
+import com.simplertutorials.android.githubtimeline.domain.*
 import com.simplertutorials.android.githubtimeline.utils.EmptyUserNameException
 import com.simplertutorials.android.githubtimeline.utils.TestUtils
 import io.reactivex.Scheduler
@@ -27,8 +24,8 @@ class ApiRepositoryTest {
     @BeforeEach
     fun init() {
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { c: Callable<Scheduler?>? -> Schedulers.trampoline() }
-        apiRepository = ApiRepository.getInstance()
         apiService = mock(ApiService::class.java)
+        apiRepository = ApiRepository(apiService)
     }
 
 
@@ -45,8 +42,8 @@ class ApiRepositoryTest {
         val expectedSingle = Single.just(expectedUser)
         `when`(apiService.getUser(anyString())).thenReturn(expectedSingle)
 
-        val returned = ApiRepository.getInstance()
-            .getUser(apiService, TestUtils.detailedUserName)
+        val returned = apiRepository
+            .getUser(TestUtils.detailedUserName)
             .test()
             .await()
             .assertValue(expectedUser)
@@ -63,8 +60,8 @@ class ApiRepositoryTest {
     @Test
     fun getDetailedUser_getUserWithAUserName_throwsException() {
         assertThrows(EmptyUserNameException::class.java) {
-            val returned = ApiRepository.getInstance()
-                .getUser(apiService, "")
+            val returned = apiRepository
+                .getUser("")
                 .test()
                 .await()
         }
@@ -79,16 +76,25 @@ class ApiRepositoryTest {
      */
     @Test
     fun searchUser_WithAUserName_returnsUserSuggestions() {
-
+        //Arrange
         val expectedResponse = UserSearchApiResponse(listOf<User>(User(TestUtils.user)))
         val expectedSingle = Single.just(expectedResponse)
         `when`(apiService.getUserList(anyString())).thenReturn(expectedSingle)
 
-        val returned = ApiRepository.getInstance()
-            .searchUser(apiService, TestUtils.userName)
+        val expectedRepositoryResponse =
+            expectedSingle.map { item: UserSearchApiResponse -> item.users }
+                .toObservable()
+                .flatMapIterable { list: List<User>? -> list }
+                .map { item: User? -> SearchItem(item!!) }
+                .toList()
+
+
+        //Act- Verify
+        apiRepository
+            .searchUser(TestUtils.userName)
             .test()
             .await()
-            .assertValue(expectedResponse)
+            .assertValue(expectedRepositoryResponse.blockingGet())
         verify(apiService).getUserList(anyString())
         verifyNoMoreInteractions(apiService)
     }
@@ -103,8 +109,8 @@ class ApiRepositoryTest {
     @Test
     fun searchUser_withEmptyUserName_throwsException() {
         assertThrows(EmptyUserNameException::class.java) {
-            val returned = ApiRepository.getInstance()
-                .searchUser(apiService, "")
+            val returned = apiRepository
+                .searchUser("")
                 .test()
                 .await()
         }
@@ -125,8 +131,8 @@ class ApiRepositoryTest {
         val expectedObservable = Single.just(expectedResponse).toObservable()
         `when`(apiService.getTimelineItems(anyString())).thenReturn(expectedObservable)
 
-        val returned = ApiRepository.getInstance()
-            .getUserTimeline(apiService, TestUtils.userName)
+        val returned = apiRepository
+            .getUserTimeline(TestUtils.userName)
             .test()
             .await()
             .assertValue(expectedResponse)
@@ -143,9 +149,9 @@ class ApiRepositoryTest {
     @Test
     fun getTimeline_withEmptyUserName_throwsException() {
 
-        assertThrows(EmptyUserNameException::class.java){
-            ApiRepository.getInstance()
-                .getUserTimeline(apiService, "")
+        assertThrows(EmptyUserNameException::class.java) {
+            apiRepository
+                .getUserTimeline("")
                 .test()
                 .await()
         }

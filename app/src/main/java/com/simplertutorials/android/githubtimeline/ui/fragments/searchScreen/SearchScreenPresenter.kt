@@ -2,15 +2,16 @@ package com.simplertutorials.android.githubtimeline.ui.fragments.searchScreen
 
 import com.simplertutorials.android.githubtimeline.R
 import com.simplertutorials.android.githubtimeline.data.api.ApiRepository
-import com.simplertutorials.android.githubtimeline.data.api.ApiService
-import com.simplertutorials.android.githubtimeline.domain.User
+import com.simplertutorials.android.githubtimeline.data.local.RealmRepository
+import com.simplertutorials.android.githubtimeline.domain.SearchItem
 import com.simplertutorials.android.githubtimeline.ui.fragments.BasePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 
 class SearchScreenPresenter(
     private val view: SearchScreenMVP.View,
-    private val apiService: ApiService
+    private val apiRepository: ApiRepository,
+    private val realmRepository: RealmRepository
 ) : BasePresenter(view), SearchScreenMVP.Presenter {
     override fun subscribeToSearchBox() {
         //subscribe to the Search Box to get all typing emits
@@ -27,30 +28,33 @@ class SearchScreenPresenter(
         }
     }
 
+    override fun writeUserToRealm(searchItem: SearchItem) {
+        realmRepository.writeToRecentSearches(searchItem)
+    }
 
     @Throws(Exception::class)
     fun callApi(n: String) {
-        val emptyUserlist: List<User> = listOf()
+        val emptySearchList: List<SearchItem> = listOf()
         //call api and get suggestions
         //prevent api call with empty text
         if (n == "") {
-            view.behaviorSubject.onNext(emptyUserlist)
+            view.behaviorSubject.onNext(emptySearchList)
             view.suggestionsRefreshed()
         } else {
-            var apiDisposable = ApiRepository.getInstance()
-                .searchUser(apiService, n)
-                .subscribe({ n ->
+            var apiDisposable = apiRepository
+                .searchUser(n)
+                .subscribe({ recentSearchItemList ->
                     //save all suggestions and notify suggestions recycler view
-                    n.users.let {
-                        view.behaviorSubject.onNext(n.users)
+                    recentSearchItemList.let {
+                        view.behaviorSubject.onNext(recentSearchItemList)
                         view.suggestionsRefreshed()
                     }
 
-                    if (n.users.isEmpty())
+                    if (recentSearchItemList.isEmpty())
                         view.showTextInputLayoutError(view.getString(R.string.no_user_found).toString())
                 }, { e ->
                     this.handleServerError(e)
-                    view.behaviorSubject.onNext(emptyUserlist)
+                    view.behaviorSubject.onNext(emptySearchList)
                     view.suggestionsRefreshed()
 
                 })

@@ -1,7 +1,7 @@
 package com.simplertutorials.android.githubtimeline.data.local
 
 import androidx.test.core.app.ApplicationProvider
-import com.simplertutorials.android.githubtimeline.domain.RecentSearchItem
+import com.simplertutorials.android.githubtimeline.domain.SearchItem
 import com.simplertutorials.android.githubtimeline.utils.TestUtils
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -36,11 +36,11 @@ class RealmServiceTest1 {
     @Test
     fun writeRecentSearch_writeRead_success() {
         // Arrange Objects
-        val recentSearchItem = RecentSearchItem(TestUtils.user)
+        val recentSearchItem = SearchItem(TestUtils.user)
         recentSearchItem.avatarUrl = ""
         val date = Date(System.currentTimeMillis())
         recentSearchItem.date = date
-        val recentSearchItem2 = RecentSearchItem(TestUtils.user)
+        val recentSearchItem2 = SearchItem(TestUtils.user)
         recentSearchItem2.avatarUrl = ""
         val date2 = Date(
             LocalDateTime.of(2016, 3, 4, 15, 3, 15)

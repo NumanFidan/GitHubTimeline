@@ -16,8 +16,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.simplertutorials.android.githubtimeline.MainApplication
 import com.simplertutorials.android.githubtimeline.R
+import com.simplertutorials.android.githubtimeline.data.api.ApiRepository
 import com.simplertutorials.android.githubtimeline.data.api.ApiService
 import com.simplertutorials.android.githubtimeline.domain.DetailedUser
+import com.simplertutorials.android.githubtimeline.domain.SearchItem
 import com.simplertutorials.android.githubtimeline.domain.TimelineItem
 import com.simplertutorials.android.githubtimeline.domain.User
 import com.simplertutorials.android.githubtimeline.ui.MainActivity
@@ -34,7 +36,7 @@ class UserDetailsFragment : BaseFragment(),
     private lateinit var activity: MainActivity
     private lateinit var recyclerViewAdapter: TimelineAdapter
     private val ARG_USER_PARAM: String = "current_user"
-    private lateinit var currentUser: User
+    private lateinit var passedSearchItem: SearchItem
     private lateinit var mTimelineList:ArrayList<TimelineItem>
     private lateinit var swipeToRefreshLayout: SwipeRefreshLayout
     private lateinit var userAvatar: ImageView
@@ -48,23 +50,23 @@ class UserDetailsFragment : BaseFragment(),
     private lateinit var userSiteLayout: ConstraintLayout
 
     @Inject
-    lateinit var apiService: ApiService
+    lateinit var apiRepository: ApiRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (arguments != null) {
-            currentUser = arguments!!.getParcelable(ARG_USER_PARAM)!!
+            passedSearchItem = arguments!!.getParcelable(ARG_USER_PARAM)!!
         }
 
         (activity.applicationContext as MainApplication).component.inject(this)
         _presenter =
             UserDetailsPresenter(
                 this,
-                apiService
+                apiRepository
             )
         mTimelineList = ArrayList()
-        _presenter.getUserDetails(currentUser)
+        _presenter.getUserDetails(passedSearchItem)
     }
 
     override fun onCreateView(
@@ -100,7 +102,7 @@ class UserDetailsFragment : BaseFragment(),
         //get User details or reload all data on Swipe to Refresh
         swipeToRefreshLayout = view.swipetorefresh_layout
         swipeToRefreshLayout.setOnRefreshListener {
-            _presenter.getUserDetails(currentUser)
+            _presenter.getUserDetails(passedSearchItem)
         }
     }
 

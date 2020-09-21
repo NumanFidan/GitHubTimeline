@@ -1,14 +1,14 @@
 package com.simplertutorials.android.githubtimeline.data.local
 
 import android.content.Context
-import com.simplertutorials.android.githubtimeline.domain.RecentSearchItem
+import com.simplertutorials.android.githubtimeline.domain.SearchItem
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmResults
 import io.realm.Sort
 import javax.inject.Inject
 
-open class RealmService () :RealmInterface {
+open class RealmService () :RealmServiceInterface {
     private var realm: Realm? = null
 
     constructor(context: Context?, realmConfiguration : RealmConfiguration):this(){
@@ -21,14 +21,14 @@ open class RealmService () :RealmInterface {
         realm = Realm.getDefaultInstance()
     }
 
-    override fun writeRecentSearchToRealm(recentSearchItem: RecentSearchItem) {
+    override fun writeRecentSearchToRealm(searchItem: SearchItem) {
         realm?.executeTransaction { realm ->
-            realm.copyToRealm(recentSearchItem)
+            realm.copyToRealm(searchItem)
         }
     }
 
-    override fun getRecentSearchesFromRealm(): RealmResults<RecentSearchItem>? {
-        return realm?.where(RecentSearchItem::class.java)
+    override fun getRecentSearchesFromRealm(): RealmResults<SearchItem>? {
+        return realm?.where(SearchItem::class.java)
             ?.sort("date", Sort.DESCENDING)
             ?.findAll()
     }
